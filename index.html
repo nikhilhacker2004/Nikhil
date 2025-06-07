@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>फ्री सब्सक्राइबर बढ़ाएं - अपने चैनल को रॉकेट बनाएं!</title>
+    <meta name="description" content="छोटे YouTube क्रिएटर्स के लिए अपने चैनल पर सब्सक्राइबर बढ़ाने का सबसे तेज़ और आसान तरीका। बस अपना चैनल लिंक डालें और पाएं हजारों सब्सक्राइबर!">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS यहाँ आएगा - इसे एक अलग style.css फाइल में रखना बेहतर है */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0); /* आकर्षक ग्रेडिएंट बैकग्राउंड */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.15); /* हल्का ट्रांसपेरेंट बैकग्राउंड */
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            backdrop-filter: blur(10px); /* ब्लर इफ़ेक्ट */
+            -webkit-backdrop-filter: blur(10px); /* Safari के लिए */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* हल्का बॉर्डर */
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .input-section, .subscriber-options, .share-section, .success-section {
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+        button {
+            background-color: #ff4757; /* आकर्षक बटन कलर */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background-color: #e63946;
+            transform: translateY(-2px);
+        }
+        .channel-info {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none; /* JavaScript से दिखेगा */
+        }
+        .channel-info img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 3px solid #fff;
+        }
+        .channel-info h3 {
+            margin: 5px 0;
+            color: #fff;
+        }
+        .channel-info p {
+            font-size: 0.9em;
+            margin-bottom: 0;
+        }
+        .subscriber-options button {
+            background-color: #28a745; /* ग्रीन बटन */
+            margin: 5px;
+        }
+        .subscriber-options button:hover {
+            background-color: #218838;
+        }
+        .share-buttons button {
+            background-color: #007bff; /* ब्लू बटन */
+            margin: 8px;
+            padding: 15px 30px; /* बड़े बटन */
+            font-size: 1.2em;
+        }
+        .share-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .container {
+                padding: 25px;
+            }
+            .share-buttons button {
+                padding: 12px 20px;
+                font-size: 1em;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="step-1" class="input-section">
+            <h1>अपने YouTube सब्सक्राइबर बढ़ाएँ!</h1>
+            <p>छोटे क्रिएटर्स के लिए अपने चैनल को तेज़ी से ग्रो करने का सबसे आसान तरीका। अभी शुरू करें और पाएं हज़ारों सब्सक्राइबर!</p>
+            <input type="text" id="channelLink" placeholder="अपना YouTube चैनल लिंक यहाँ डालें (उदा: youtube.com/c/YourChannel)" aria-label="YouTube Channel Link">
+            <button id="fetchChannelBtn">चैनल जानकारी प्राप्त करें</button>
+            <div id="channelInfo" class="channel-info">
+                <img id="channelThumbnail" src="" alt="Channel Thumbnail">
+                <h3 id="channelName"></h3>
+                <p id="currentSubscribers"></p>
+            </div>
+        </div>
+
+        <div id="step-2" class="subscriber-options hidden">
+            <h1>कितने सब्सक्राइबर चाहिए?</h1>
+            <p>अपनी पसंद के सब्सक्राइबर बढ़ाएं। यह पूरी तरह से मुफ्त है!</p>
+            <button data-subscribers="1500">+1500 सब्सक्राइबर</button>
+            <button data-subscribers="5000">+5000 सब्सक्राइबर</button>
+            <button data-subscribers="10000">+10000 सब्सक्राइबर</button>
+            <button data-subscribers="custom">कस्टम सब्सक्राइबर</button>
+            <input type="number" id="customSubInput" placeholder="कस्टम संख्या दर्ज करें" class="hidden" min="1000">
+            <button id="confirmSubsBtn">कंफर्म और आगे बढ़ें</button>
+        </div>
+
+        <div id="step-3" class="share-section hidden">
+            <h1>आपका अगला कदम</h1>
+            <p>अपने सब्सक्राइबर बढ़ाने के लिए, इस पेज को 5 ग्रुप/दोस्तों के साथ शेयर करें। शेयर करने के बाद, आपके सब्सक्राइबर बढ़ जाएंगे!</p>
+            <div class="share-buttons">
+                <button id="shareWhatsApp">WhatsApp पर शेयर करें</button>
+                <button id="shareFacebook">Facebook पर शेयर करें</button>
+                <button id="shareTelegram">Telegram पर शेयर करें</button>
+                <button id="copyLink">लिंक कॉपी करें</button>
+            </div>
+            <p id="shareCounter">आपको अभी 5 बार शेयर करना है।</p>
+            <button id="continueBtn" class="hidden">जारी रखें</button>
+        </div>
+
+        <div id="step-4" class="success-section hidden">
+            <h1>बधाई हो! 🎉</h1>
+            <p>आपके चैनल पर सब्सक्राइबर सफलतापूर्वक बढ़ा दिए गए हैं। कुछ ही घंटों में आपको बदलाव दिखना शुरू हो जाएगा!</p>
+            <p>इस टूल को दूसरों के साथ भी शेयर करें!</p>
+            <button onclick="location.reload()">दोबारा इस्तेमाल करें</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript यहाँ आएगा - इसे एक अलग script.js फाइल में रखना बेहतर है
+        const channelLinkInput = document.getElementById('channelLink');
+        const fetchChannelBtn = document.getElementById('fetchChannelBtn');
+        const channelInfoDiv = document.getElementById('channelInfo');
+        const channelThumbnail = document.getElementById('channelThumbnail');
+        const channelName = document.getElementById('channelName');
+        const currentSubscribers = document.getElementById('currentSubscribers');
+        
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const step4 = document.getElementById('step-4');
+
+        const subscriberOptionsDiv = document.querySelector('.subscriber-options');
+        const confirmSubsBtn = document.getElementById('confirmSubsBtn');
+        const customSubInput = document.getElementById('customSubInput');
+        
+        const shareCounter = document.getElementById('shareCounter');
+        const continueBtn = document.getElementById('continueBtn');
+        const shareWhatsAppBtn = document.getElementById('shareWhatsApp');
+        const shareFacebookBtn = document.getElementById('shareFacebook');
+        const shareTelegramBtn = document.getElementById('shareTelegram');
+        const copyLinkBtn = document.getElementById('copyLink');
+
+        let selectedSubscribers = 0;
+        let sharesNeeded = 5; // कितनी बार शेयर करना है
+        let sharesDone = 0; // कितनी बार शेयर किया
+
+        // --- Step 1: चैनल लिंक डालना और जानकारी दिखाना ---
+        fetchChannelBtn.addEventListener('click', () => {
+            const link = channelLinkInput.value.trim();
+            if (link) {
+                // यहाँ आपको एक सर्वर-साइड API कॉल करना होगा
+                // जो YouTube Data API का उपयोग करके चैनल की जानकारी (नाम, थंबनेल, सब्सक्राइबर काउंट) फेच करेगा।
+                // सीधे क्लाइंट-साइड से YouTube API कीज़ को एक्सपोज़ करना सुरक्षित नहीं है।
+                
+                // **डेमो के लिए नकली डेटा (असली में API कॉल यहाँ आएगा):**
+                channelThumbnail.src = 'https://via.placeholder.com/80/0000FF/FFFFFF?text=YT'; // नकली थंबनेल
+                channelName.textContent = 'आपका डेमो चैनल नाम';
+                currentSubscribers.textContent = 'वर्तमान सब्सक्राइबर: 12345'; // नकली सब्सक्राइबर काउंट
+                channelInfoDiv.style.display = 'block'; // चैनल जानकारी दिखाओ
+
+                setTimeout(() => {
+                    step1.classList.add('hidden');
+                    step2.classList.remove('hidden');
+                }, 1500); // 1.5 सेकंड बाद अगले स्टेप पर जाएं
+                
+            } else {
+                alert('कृपया अपना YouTube चैनल लिंक डालें।');
+            }
+        });
+
+        // --- Step 2: सब्सक्राइबर संख्या चुनना ---
+        subscriberOptionsDiv.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                const subValue = event.target.dataset.subscribers;
+                if (subValue === 'custom') {
+                    customSubInput.classList.remove('hidden');
+                    selectedSubscribers = 0; // कस्टम चुनने पर पिछली संख्या रीसेट करें
+                } else {
+                    customSubInput.classList.add('hidden');
+                    selectedSubscribers = parseInt(subValue);
+                }
+                // सभी बटन से 'selected' क्लास हटाओ
+                document.querySelectorAll('.subscriber-options button').forEach(btn => btn.classList.remove('selected'));
+                // चुने हुए बटन पर 'selected' क्लास जोड़ो (CSS में स्टाइल करें)
+                event.target.classList.add('selected');
+            }
+        });
+
+        confirmSubsBtn.addEventListener('click', () => {
+            if (customSubInput.classList.contains('hidden')) {
+                // अगर कस्टम इनपुट हिडन है तो बटन से ली गई संख्या मान्य है
+                if (selectedSubscribers > 0) {
+                    // console.log(`Selected: ${selectedSubscribers} subscribers`);
+                    step2.classList.add('hidden');
+                    step3.classList.remove('hidden');
+                } else {
+                    alert('कृपया सब्सक्राइबर की संख्या चुनें।');
+                }
+            } else {
+                // अगर कस्टम इनपुट दिख रहा है तो उससे संख्या लें
+                const customValue = parseInt(customSubInput.value);
+                if (customValue >= 1000) {
+                    selectedSubscribers = customValue;
+                    // console.log(`Selected Custom: ${selectedSubscribers} subscribers`);
+                    step2.classList.add('hidden');
+                    step3.classList.remove('hidden');
+                } else {
+                    alert('कृपया कम से कम 1000 सब्सक्राइबर की संख्या दर्ज करें।');
+                }
+            }
+        });
+
+        // --- Step 3: शेयरिंग फ़ंक्शनलिटी ---
+        const pageUrl = window.location.href; // इस पेज का URL
+        const shareMessage = encodeURIComponent("अपने YouTube चैनल पर फ्री सब्सक्राइबर बढ़ाएं! यह टूल छोटे क्रिएटर्स के लिए कमाल का है। अभी आज़माएं: " + pageUrl);
+
+        function incrementShareCount() {
+            sharesDone++;
+            shareCounter.textContent = `आपको अभी ${sharesNeeded - sharesDone} बार शेयर करना है।`;
+            if (sharesDone >= sharesNeeded) {
+                shareCounter.textContent = 'बधाई हो! आप आगे बढ़ सकते हैं।';
+                continueBtn.classList.remove('hidden');
+            }
+        }
+
+        shareWhatsAppBtn.addEventListener('click', () => {
+            window.open(`https://api.whatsapp.com/send?text=${shareMessage}`, '_blank');
+            incrementShareCount();
+        });
+
+        shareFacebookBtn.addEventListener('click', () => {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent("अपने YouTube चैनल पर फ्री सब्सक्राइबर बढ़ाएं!")}`, '_blank');
+            incrementShareCount();
+        });
+
+        shareTelegramBtn.addEventListener('click', () => {
+            window.open(`https://telegram.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${shareMessage}`, '_blank');
+            incrementShareCount();
+        });
+
+        copyLinkBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(pageUrl)
+                .then(() => {
+                    alert('लिंक कॉपी हो गया है! अब आप इसे कहीं भी पेस्ट कर सकते हैं।');
+                    incrementShareCount();
+                })
+                .catch(err => {
+                    console.error('लिंक कॉपी करने में विफल:', err);
+                    alert('लिंक कॉपी नहीं हो सका। कृपया मैन्युअल रूप से कॉपी करें: ' + pageUrl);
+                });
+        });
+
+        continueBtn.addEventListener('click', () => {
+            if (sharesDone >= sharesNeeded) {
+                // यहाँ आप एक AJAX कॉल भेज सकते हैं अपने सर्वर पर
+                // ताकि सब्सक्राइबर बढ़ाने का प्रोसेस शुरू हो सके।
+                // यह एक जटिल बैकएंड प्रक्रिया होगी जिसमें YouTube API Rate Limits,
+                // और वास्तविक सब्सक्राइबर एक्सचेंज लॉजिक शामिल होगा।
+                // ध्यान दें: YouTube की नीतियों के अनुसार "बॉट" द्वारा सब्सक्राइबर बढ़ाना अनुमत नहीं है।
+                // यह टूल एक "सब-फॉर-सब" (सब्सक्राइब के बदले सब्सक्राइब) कम्युनिटी को बढ़ावा देने के लिए ज़्यादा उपयुक्त है।
+                
+                // डेमो के लिए सीधा सक्सेस स्टेप पर जाएं
+                step3.classList.add('hidden');
+                step4.classList.remove('hidden');
+            } else {
+                alert(`आपको अभी भी ${sharesNeeded - sharesDone} बार शेयर करना है।`);
+            }
+        });
+
+    </script>
+</body>
+</html>
