@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube चैनल खोज और ग्रोथ सिम्युलेटर</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .yt-icon {
+            width: 28px;
+            height: 20px;
+            background-color: #FF0000;
+            border-radius: 6px;
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .yt-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-40%, -50%);
+            border-left: 8px solid white;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: #ffffff;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-2xl mx-auto">
+        <!-- Setup View -->
+        <div id="setup-view" class="bg-white p-8 rounded-2xl shadow-xl transition-opacity duration-500">
+            <div class="text-center mb-6">
+                <div class="yt-icon inline-block mr-2"></div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 inline-block align-middle">
+                    YouTube चैनल खोजें और ग्रोथ देखें
+                </h1>
+                <p class="text-gray-500 mt-2">अपना असली चैनल खोजें और उसकी ग्रोथ का अनुकरण करें!</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="apiKeyInput" class="block text-sm font-medium text-gray-700 mb-1">YouTube Data API कुंजी</label>
+                    <input type="password" id="apiKeyInput" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="अपनी API कुंजी यहाँ पेस्ट करें">
+                    <p class="text-xs text-gray-500 mt-1">API कुंजी प्राप्त करने के निर्देश के लिए <a href="https://developers.google.com/youtube/v3/getting-started" target="_blank" class="text-blue-600 hover:underline">यहाँ क्लिक करें</a>।</p>
+                </div>
+                <div>
+                    <label for="channelNameInput" class="block text-sm font-medium text-gray-700 mb-1">आपका YouTube चैनल का नाम</label>
+                    <input type="text" id="channelNameInput" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="यहाँ अपना चैनल का नाम दर्ज करें...">
+                </div>
+                 <div id="error-message" class="hidden text-center bg-red-100 text-red-700 p-3 rounded-lg"></div>
+                <button id="search-button" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-gray-400">
+                    <span id="button-text">चैनल खोजें</span>
+                    <div id="loading-spinner" class="spinner hidden ml-3"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="hidden transition-opacity duration-500 opacity-0">
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <img id="channel-logo" src="" alt="Channel Logo" class="w-16 h-16 md:w-20 md:h-20 rounded-full flex-shrink-0 bg-gray-200">
+                <div class="text-left">
+                    <h2 id="displayedChannelName" class="text-2xl md:text-3xl font-bold text-gray-800 break-words"></h2>
+                    <p class="text-gray-500 mt-1">आपके चैनल की लाइव ग्रोथ</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xl text-center">
+                    <h3 class="text-lg font-semibold text-gray-500 mb-2">कुल सब्सक्राइबर्स</h3>
+                    <div id="subscriberCount" class="text-5xl font-bold text-red-600">0</div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-xl text-center">
+                    <h3 class="text-lg font-semibold text-gray-500 mb-2">कुल विज़िटर्स</h3>
+                    <div id="visitorCount" class="text-5xl font-bold text-gray-800">0</div>
+                </div>
+            </div>
+             <div class="text-center mt-8">
+                 <button id="restart-button" class="bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 transition duration-300">नई खोज करें</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const setupView = document.getElementById('setup-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            const searchButton = document.getElementById('search-button');
+            const buttonText = document.getElementById('button-text');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const channelNameInput = document.getElementById('channelNameInput');
+            const errorMessage = document.getElementById('error-message');
+            
+            const displayedChannelName = document.getElementById('displayedChannelName');
+            const channelLogo = document.getElementById('channel-logo');
+            const subscriberCountEl = document.getElementById('subscriberCount');
+            const visitorCountEl = document.getElementById('visitorCount');
+            const restartButton = document.getElementById('restart-button');
+
+            let subscribers = 0;
+            let visitors = 0;
+            let growthInterval;
+
+            searchButton.addEventListener('click', async () => {
+                const apiKey = apiKeyInput.value.trim();
+                const channelName = channelNameInput.value.trim();
+
+                if (!apiKey || !channelName) {
+                    showError("कृपया API कुंजी और चैनल का नाम दोनों दर्ज करें।");
+                    return;
+                }
+
+                showLoading(true);
+                errorMessage.classList.add('hidden');
+
+                try {
+                    // Search for the channel using the YouTube Data API
+                    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(channelName)}&type=channel&maxResults=1&key=${apiKey}`;
+                    const searchResponse = await fetch(searchUrl);
+                    const searchData = await searchResponse.json();
+
+                    if (searchData.error) {
+                         throw new Error(searchData.error.message || 'अमान्य API कुंजी या अनुरोध त्रुटि।');
+                    }
+
+                    if (!searchData.items || searchData.items.length === 0) {
+                        throw new Error("चैनल नहीं मिला। कृपया नाम जांचें और पुनः प्रयास करें।");
+                    }
+
+                    const channelId = searchData.items[0].id.channelId;
+                    
+                    // Get channel details including statistics and branding
+                    const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;
+                    const channelResponse = await fetch(channelUrl);
+                    const channelData = await channelResponse.json();
+
+                     if (channelData.error) {
+                         throw new Error(channelData.error.message || 'चैनल विवरण प्राप्त करने में त्रुटि।');
+                    }
+                    
+                    const channelInfo = channelData.items[0];
+                    const realChannelName = channelInfo.snippet.title;
+                    const logoUrl = channelInfo.snippet.thumbnails.high.url;
+                    const initialSubscribers = parseInt(channelInfo.statistics.subscriberCount);
+                    
+                    // Update UI with real data
+                    displayedChannelName.textContent = realChannelName;
+                    channelLogo.src = logoUrl;
+                    subscribers = initialSubscribers;
+                    visitors = 0; // Start visitors from 0
+                    subscriberCountEl.textContent = subscribers.toLocaleString('hi-IN');
+                    visitorCountEl.textContent = visitors.toLocaleString('hi-IN');
+
+                    startSimulation();
+
+                } catch (error) {
+                    showError(error.message);
+                    showLoading(false);
+                }
+            });
+
+            function startSimulation() {
+                // Hide setup and show dashboard
+                setupView.style.opacity = '0';
+                setTimeout(() => {
+                    setupView.classList.add('hidden');
+                    dashboardView.classList.remove('hidden');
+                    setTimeout(() => {
+                        dashboardView.style.opacity = '1';
+                    }, 50);
+                }, 500);
+
+                // Start simulating growth from the fetched numbers
+                growthInterval = setInterval(() => {
+                    subscribers += Math.floor(Math.random() * 5) + 1;
+                    visitors += Math.floor(Math.random() * 25) + 10;
+                    subscriberCountEl.textContent = subscribers.toLocaleString('hi-IN');
+                    visitorCountEl.textContent = visitors.toLocaleString('hi-IN');
+                }, 2000);
+            }
+            
+            restartButton.addEventListener('click', () => {
+                clearInterval(growthInterval); // Stop the simulation
+                showLoading(false);
+                dashboardView.style.opacity = '0';
+                setTimeout(() => {
+                    dashboardView.classList.add('hidden');
+                    setupView.classList.remove('hidden');
+                    errorMessage.classList.add('hidden');
+                    channelNameInput.value = ''; // Clear input for next search
+                    setTimeout(() => {
+                        setupView.style.opacity = '1';
+                    }, 50);
+                }, 500);
+            });
+
+            function showLoading(isLoading) {
+                if (isLoading) {
+                    buttonText.classList.add('hidden');
+                    loadingSpinner.classList.remove('hidden');
+                    searchButton.disabled = true;
+                } else {
+                    buttonText.classList.remove('hidden');
+                    loadingSpinner.classList.add('hidden');
+                    searchButton.disabled = false;
+                }
+            }
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
